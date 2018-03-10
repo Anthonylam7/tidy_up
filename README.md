@@ -2,7 +2,7 @@
 Scripts for organizing files
 
 # Usage
-'''bash
+```bash
 chmod 700 organize.py
 organize.py /path/to/source
-'''
+```
