@@ -1,4 +1,8 @@
-# tidy_up
+# Tidy Up
 Scripts for organizing files
 
-# usage
+# Usage
+'''bash
+chmod 700 organize.py
+organize.py /path/to/source
+'''
