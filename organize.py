@@ -144,6 +144,10 @@ def organize(source, destination, **kwargs):
     :return:
     """
     table = get_file_paths_table(source, pattern=kwargs.get("pattern"), verbose=kwargs.get("verbose", False))
+    # stop when nothing left to do
+    if not table:
+        logger.info("Did not find anything to organize.")
+        return
     create_subdirectories(destination, table, verbose=kwargs.get("verbose", False))
     for path, files in table.items():
         for file in files:
