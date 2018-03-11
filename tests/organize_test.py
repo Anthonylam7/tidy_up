@@ -15,6 +15,7 @@ class TestOrganizingNoFiles(TestCase):
         except:
             pass
         self.assertEqual(get_file_paths_table("emptyDir"), {})
+        self.assertEqual(create_subdirectories("emptyDir", {}), 0)
         os.removedirs("emptyDir")
 
 
