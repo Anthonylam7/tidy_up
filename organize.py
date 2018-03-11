@@ -2,7 +2,7 @@
 """
 
     Name:
-        organize -
+        organize - regex-based file grouping tools
 
     Synopsis:
         organize path [options]
@@ -31,7 +31,10 @@
 import os, re, argparse, logging
 
 # Configure parse
-parser = argparse.ArgumentParser(description="Organize a directory using patterns")
+parser = argparse.ArgumentParser(
+    description="Organize a directory using patterns",
+    usage="python3 organize [-h] [options] path/to/source/directory"
+)
 parser.add_argument(
     "src",
     help="Path to directory containing files to be organized.",
