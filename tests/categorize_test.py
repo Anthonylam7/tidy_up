@@ -1,4 +1,4 @@
-from categorize import parse_config_dict, create_file_table, categorize
+from categorize import reverse_dict_kv, create_file_table, categorize
 from .utils import generate_files
 from unittest import TestCase, TestResult, TestSuite, TextTestRunner, makeSuite
 import os, shutil
@@ -17,13 +17,13 @@ class UtilityFunctionTest(TestCase):
             ".midi": "music",
             ".mid": "music"
         }
-        actual = parse_config_dict(d)
+        actual = reverse_dict_kv(d)
         self.assertDictEqual(actual, expected)
 
     def test_invalid_parse_inputs(self):
         with self.assertRaises(TypeError):
-            parse_config_dict({"This": "should fail"})
-            parse_config_dict("This should fail")
+            reverse_dict_kv({"This": "should fail"})
+            reverse_dict_kv("This should fail")
 
 
 class CatergorizeSingleFileCase(TestCase):
