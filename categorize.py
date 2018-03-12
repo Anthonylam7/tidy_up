@@ -138,17 +138,17 @@ ch.setLevel(logging.DEBUG)
 logger.addHandler(ch)
 
 
-def parse_config_dict(config, **kwargs):
+def reverse_dict_kv(target_dict, **kwargs):
     """
     Takes a config dictionary where values are sequ of strings and creates a new dictionary where each string becomes
     the key and the original key becomes the new value
-    :param config: dict {"dirnam" : set {extensions}}
+    :param target_dict: dict {"dirnam" : set {extensions}}
     :return: dict {"extensions": "dirnam"}
     """
-    if not isinstance(config, (dict,)):
+    if not isinstance(target_dict, (dict,)):
         raise TypeError("Argument should be of type dict!")
     lut = {}
-    for k, v in config.items():
+    for k, v in target_dict.items():
         if not hasattr(v, "__iter__") or isinstance(v, (str,)):
             raise TypeError("Values should be a seq of strings!")
         for item in v:
@@ -186,8 +186,8 @@ def create_file_table(target, ext_map, **kwargs):
 def categorize(src, destination, config_dict=DEFAULT_CONFIG, **kwargs):
     dir_ext_lut = config_dict["EXTENSION"]
     dir_subdir_lut = config_dict["DIRECTORY"]
-    ext_dir_lut = parse_config_dict(dir_ext_lut)
-    subdir_dir_lut = parse_config_dict(dir_subdir_lut)
+    ext_dir_lut = reverse_dict_kv(dir_ext_lut)
+    subdir_dir_lut = reverse_dict_kv(dir_subdir_lut)
     file_table = create_file_table(src, ext_dir_lut)
 
     for dir, files in file_table.items():
@@ -210,8 +210,35 @@ def categorize(src, destination, config_dict=DEFAULT_CONFIG, **kwargs):
             os.rename(file_loc, dest_loc)
 
 
+def parse_configparser_object(config):
+    result = dict()
+    for section in config.sections():
+        section_dict = dict()
+        for option in config[section]:
+            value = config[section][option].strip("{}[]()").split(", ")
+            section_dict[option] = set(value)
+        result[section] = section_dict
+    return result
+
 
 if __name__ == "__main__":
     cl_inp = parser.parse_args()
     # Set config parser
-    config = configparser.ConfigParser()
+    verbose = cl_inp.verbose
+    config_path = cl_inp.config
+    src = cl_inp.src
+    dest = cl_inp.dest if cl_inp.dest else src
+
+    if verbose:
+        logger.setLevel(logging.INFO)
+    else:
+        logger.setLevel(logging.WARN)
+
+    if config_path:
+        if os.path.exists(config_path) and os.path.isfile(config_path):
+            config = configparser.ConfigParser()
+            config.read(config_path)
+            config_dict = parse_configparser_object(config)
+            categorize(src, dest, config_dict=config_dict)
+    else:
+        categorize(src, dest)
