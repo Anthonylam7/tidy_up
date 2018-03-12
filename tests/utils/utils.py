@@ -1,5 +1,5 @@
 import os
-def generate_files(path, baseName, numFiles=1):
+def generate_files(path, baseName, numFiles=1, extension="txt"):
     """
     creates numFiles number of files at a specified path
     :param path: path to directory, if directory is not there create it
@@ -19,7 +19,7 @@ def generate_files(path, baseName, numFiles=1):
         raise ValueError("path should be a valid path to a directory!")
     #create empty files
     for num in range(numFiles):
-        filePath = os.path.join(cwd, path, "{}{}.txt".format(baseName, num))
+        filePath = os.path.join(cwd, path, "{}{}.{}".format(baseName, num, extension))
         open(filePath, "w").close()
 
 
