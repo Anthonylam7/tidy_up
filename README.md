@@ -44,7 +44,10 @@ alternative way to search for files.
 ## Basic Usage
 ```bash
 ~$ chmod 700 organize.py
+~$ chmod 700 categorize.py
 ~$ organize.py /path/to/source
-~ categorize /path/to/source
+~$ categorize.py /path/to/source
 ```
-This will create subdirectories based on regex capture groups in the path to source directory and move files to their corresponding directories.
+This will create subdirectories based on regex capture groups in the path to source 
+directory and move files to their corresponding directories. Use `-h` to find additional
+usage information.
