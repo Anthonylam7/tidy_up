@@ -114,12 +114,58 @@ parser.add_argument(
 )
 
 
+# Set logger with only handler of standard out
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 logger.addHandler(ch)
 
 
+def parse_config_dict(config):
+    """
+    Takes a config dictionary where values are sequ of strings and creates a new dictionary where each string becomes
+    the key and the original key becomes the new value
+    :param config:
+    :return:
+    """
+    if not isinstance(config, (dict)):
+        raise TypeError("Argument should be of type dict!")
+    lut = {}
+    for k, v in config.items():
+        if not hasattr(v, "__iter__") or isinstance(v, (iter)):
+            raise TypeError("Values should be a seq of strings!")
+        for item in v:
+            lut[item] = k
+    return lut
+
+
+def create_file_table(target, ext_map, **kwargs):
+    '''
+    Collects all the files in a given directory and group them together by extension based on ext_map
+    :param target: path to target dir
+    :param ext_map: dict {dirname: set {extensions,}
+    :param kwargs:
+    :return:
+    '''
+    table = {}
+    pattern = ".*(\\..*)"
+    regex = re.compile(pattern)
+    try:
+        for basename in os.listdir(target):
+            if os.path.isfile(os.path.join(target, basename)):
+                match = regex.match(basename)
+                ext = match.group()
+                dir_name_key = ext_map[ext]
+                if not table.get(dir_name_key):
+                    table[dir_name_key] = set()
+                table[dir_name_key].add(basename)
+    except FileNotFoundError:
+        logger.error("File not found.")
+        raise FileNotFoundError("Please provide a valid path to a directory!")
+    return table
+
 
 if __name__ == "__main__":
     cl_inp = parser.parse_args()
+    # Set config parser
+    config = configparser.ConfigParser()
