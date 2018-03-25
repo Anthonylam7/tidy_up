@@ -73,7 +73,7 @@ def get_file_paths_table(path, **kwargs):
     paths = dict()
     pattern = kwargs.get("pattern", None)
     if not pattern:
-        pattern = "^(.* t?)_(.*?)_.*?\\..{3,4}$"
+        pattern = "^(.*?)_(.*?)_.*?\\..{3,4}$"
     logger.info("Using pattern: {}".format(pattern))
     regex = re.compile(pattern)
     try:
